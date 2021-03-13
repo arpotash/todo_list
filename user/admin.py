@@ -1,4 +1,4 @@
 from django.contrib import admin
-from user.models import Library_User
+from user.models import NoteUser
 
-admin.site.register(Library_User)
+admin.site.register(NoteUser)
