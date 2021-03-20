@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+from dynaconf import settings as _settings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '+trl&d@ywr^4oad76n9i4@qc@wyzdqq^n*z##@rx^mhji&jv!3'
+SECRET_KEY = _settings.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = _settings.DEBUG
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = _settings.ALLOWED_HOSTS
 
 
 # Application definition
@@ -41,7 +42,8 @@ INSTALLED_APPS = [
     'library',
     'user',
     'corsheaders',
-    'note'
+    'note',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -145,4 +147,41 @@ REST_FRAMEWORK = {
     'JSON_UNDERSCOREIZE': {
         'no_underscore_before_number': True,
     },
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100,
+    'DEFAULT_FILTER_BACKENDS':
+        ['django_filters.rest_framework.DjangoFilterBackend'],
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'basic': {
+            'format': '\n%(asctime)s %(levelname)s %(module)s - %(message)s'
+        }
+    },
+    'handlers': {
+        'basic': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'logfile.log',
+            'formatter': 'basic'
+        },
+        'error': {
+            'level': 'ERROR',
+            'class': 'logging.StreamHandler',
+            'formatter': 'basic'
+        }
+    },
+    'loggers': {
+        'users_log': {
+            'level': 'INFO',
+            'handlers': ['basic']
+        },
+        'projects_log': {
+            'level': 'INFO',
+            'handlers': ['basic']
+        }
+    }
 }

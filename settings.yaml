@@ -1,0 +1,10 @@
+default:
+  DEBUG: true
+  SECRET_KEY: ""
+  ALLOWED_HOSTS: []
+
+development:
+  DEBUG: true
+  ALLOWED_HOSTS:
+    - 127.0.0.1
+    - localhost
