@@ -4,7 +4,7 @@ from user.serializers import UserModelSerializer
 
 
 class ProjectModelSerializer(ModelSerializer):
-    users = StringRelatedField(many=True)
+    # users = StringRelatedField(many=True, read_only=True)
 
     def create(self, validated_data):
         return Project.objects.create(**validated_data)
@@ -16,8 +16,8 @@ class ProjectModelSerializer(ModelSerializer):
 
 class TODOModelSerializer(ModelSerializer):
 
-    project = StringRelatedField()
-    creator = StringRelatedField()
+    # project = StringRelatedField(many=True, read_only=True)
+    # creator = StringRelatedField(many=True, read_only=True)
 
     class Meta:
         model = TODO
