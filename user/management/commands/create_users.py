@@ -1,5 +1,5 @@
 from django.core.management import BaseCommand
-from user.models import User
+from user.models import NoteUser
 from django.utils.crypto import get_random_string
 
 
@@ -18,5 +18,5 @@ class Command(BaseCommand):
                 username = f'{prefix}_{get_random_string()}'
             else:
                 username = get_random_string()
-            User.objects.create(username=get_random_string(), email=get_random_string())
-        User.objects.create_superuser(username='potr', first_name='Artem', last_name='Potashov')
+            NoteUser.objects.create(username=get_random_string(), email=get_random_string())
+        NoteUser.objects.create_superuser(username='potr', first_name='Artem', last_name='Potashov')

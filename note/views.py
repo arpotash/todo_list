@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django_filters import rest_framework as filters
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet, mixins
+from rest_framework.viewsets import ModelViewSet
 from .models import Project, TODO
 from rest_framework.viewsets import GenericViewSet
 from .serializers import ProjectModelSerializer, TODOModelSerializer
@@ -19,13 +19,6 @@ class ProjectModelViewSet(ModelViewSet):
     pagination_class = ProjectPagination
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = ProjectFilter
-
-    def get_queryset(self):
-        queryset = Project.objects.all()
-        name = self.request.query_params.get('name', None)
-        if name:
-            queryset = queryset.filter(name__contains=name)
-        return queryset
 
 
 class TODOModelViewSet(ModelViewSet):
