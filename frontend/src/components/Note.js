@@ -1,5 +1,4 @@
 import React from "react";
-import Grid from "@material-ui/core/Grid";
 import {makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
@@ -10,35 +9,34 @@ const useStyles = makeStyles({
         justifyContent: "space-around",
         textAlign: "center"
     },
-    user_value: {
-        marginLeft: "62px"
-    },
     user_block: {
         marginTop: "50px"
     },
 })
 
-const UserItem = ({ user }) => {
+const NoteItem = ({ note }) => {
     const classes = useStyles();
     return (
         <div className={classes.root}>
-            <div className={classes.user_value}>{user.username}</div>
-            <div className={classes.user_value}>{user.email}</div>
+            <div>{note.project}</div>
+            <div>{note.text}</div>
+            <div>{note.creator}</div>
         </div>
     )
 }
 
-const UserList = ({ users }) =>{
+const NoteList = ({ notes }) =>{
     const classes = useStyles();
     return (
         <div className={classes.user_block}>
             <div className={classes.root}>
-                <h3>Username</h3>
-                <h3>Email</h3>
+                <h3>Project</h3>
+                <h3>Text</h3>
+                <h3>Creator</h3>
             </div>
-            {users.map((user) => <UserItem user={user} />)}
+            {notes.map((note) => <NoteItem note={note} />)}
         </div>
     )
 }
 
-export default UserList;
+export default NoteList;
