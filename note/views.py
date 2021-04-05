@@ -1,12 +1,11 @@
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
 from django_filters import rest_framework as filters
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from .models import Project, TODO
-from rest_framework.viewsets import GenericViewSet
-from .serializers import ProjectModelSerializer, TODOModelSerializer
+from .serializers import ProjectModelSerializer, TODOModelSerializer, ProjectModelSerializerBase, \
+    CreateTODOModelSerializer
+from rest_framework.permissions import IsAuthenticated
 from .pagination import ProjectPagination, TODOPagination
 from .filters import ProjectFilter
 import logging
@@ -19,13 +18,20 @@ class ProjectModelViewSet(ModelViewSet):
     pagination_class = ProjectPagination
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = ProjectFilter
+    permission_classes = [IsAuthenticated]
 
 
 class TODOModelViewSet(ModelViewSet):
     queryset = TODO.objects.all()
-    serializer_class = TODOModelSerializer
     pagination_class = TODOPagination
     filterset_fields = ['project']
+    serializer_class = TODOModelSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_serializer_class(self):
+        if self.request.method in ['GET']:
+            return TODOModelSerializer
+        return CreateTODOModelSerializer
 
     def destroy(self, request, pk=None):
         try:

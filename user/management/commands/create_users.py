@@ -19,4 +19,3 @@ class Command(BaseCommand):
             else:
                 username = get_random_string()
             NoteUser.objects.create(username=get_random_string(), email=get_random_string())
-        NoteUser.objects.create_superuser(username='potr', first_name='Artem', last_name='Potashov')
