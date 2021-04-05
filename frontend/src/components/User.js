@@ -7,7 +7,7 @@ const useStyles = makeStyles({
         display: "flex",
         flex: 1,
         flexDirection: "row",
-        justifyContent: "space-around",
+        justifyContent: "space-evenly",
         textAlign: "center"
     },
     user_value: {

@@ -19,7 +19,7 @@ class Project(models.Model):
 class TODO(models.Model):
     uuid = models.UUIDField(default=uuid4)
     project = models.ForeignKey(Project, related_name='project', on_delete=models.CASCADE)
-    creator = models.ForeignKey(NoteUser, related_name='owner', on_delete=models.PROTECT, default='')
+    creator = models.ForeignKey(NoteUser, related_name='owner', on_delete=models.PROTECT)
     text = models.TextField(max_length=512)
     date_create = models.DateTimeField(verbose_name='create_at', auto_now_add=True)
     date_update = models.DateTimeField(verbose_name='update_at', auto_now_add=True)
