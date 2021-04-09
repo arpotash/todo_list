@@ -18,7 +18,7 @@ class ProjectModelViewSet(ModelViewSet):
     pagination_class = ProjectPagination
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = ProjectFilter
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
 
 class TODOModelViewSet(ModelViewSet):
@@ -26,14 +26,14 @@ class TODOModelViewSet(ModelViewSet):
     pagination_class = TODOPagination
     filterset_fields = ['project']
     serializer_class = TODOModelSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
         if self.request.method in ['GET']:
             return TODOModelSerializer
         return CreateTODOModelSerializer
 
-    def destroy(self, request, pk=None):
+    def destroy(self, request, pk=None, *args, **kwargs):
         try:
             instance = self.get_object()
             instance.is_active = False

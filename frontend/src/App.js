@@ -74,7 +74,7 @@ class App extends React.Component {
 
   get_headers() {
       let headers = {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json; version=v2'
       }
   if (this.is_authenticated())
     {
@@ -85,17 +85,16 @@ class App extends React.Component {
 
   load_data() {
       const headers = this.get_headers()
-      console.log(headers)
-      axios.get('http://127.0.0.1:8000/api/projects/', {headers})
-          .then(response => {
-              const projects = response.data
-                this.setState({projects: projects.results}
-                )
-          }).catch(error => console.log(error))
       axios.get('http://127.0.0.1:8000/api/users/', {headers})
           .then(response => {
               const users = response.data
-                this.setState({users: users})
+                this.setState({users: users.results})
+          }).catch(error => console.log(error))
+
+      axios.get('http://127.0.0.1:8000/api/projects/', {headers})
+          .then(response => {
+              const projects = response.data
+                this.setState({projects: projects.results})
           }).catch(error => console.log(error))
 
       axios.get('http://127.0.0.1:8000/api/notes/', {headers})
@@ -131,8 +130,9 @@ class App extends React.Component {
                                 </Navbar.Collapse>
                             </Navbar>
                             <div className="ml-auto">
-                                {this.is_authenticated() ? <button type="button" className="btn btn-light"
-                                                                   onClick={()=> this.logout()}>Logout</button>:
+                                {this.is_authenticated() ?
+                                    <button type="button" className="btn btn-light"
+                                            onClick={()=> this.logout()}>Logout</button>:
                                     <button type="button" className="btn btn-light">
                                         <Link to='/login'>Login</Link>
                                     </button>}
