@@ -17,11 +17,11 @@ class TestProjectViewSetAuthUser(TestCase):
         self.client = APIClient(HTTP_AUTHORIZATION='Token ' + token.key)
 
     def test_get_list(self):
-        response = self.client.get(f'/api/v1/projects/')
+        response = self.client.get(f'/api/projects/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_create_project(self):
-        request = self.client.post('/api/v1/projects/',
+        request = self.client.post('/api/projects/',
                                    {'name': 'project_example',
                                     'users': [1, 2],
                                     'url': 'http://project.repo',
@@ -29,7 +29,7 @@ class TestProjectViewSetAuthUser(TestCase):
         self.assertEqual(request.status_code, status.HTTP_201_CREATED)
 
     def test_update_project(self):
-        request = self.client.patch(f'/api/v1/projects/{self.project.id}/',
+        request = self.client.patch(f'/api/projects/{self.project.id}/',
                                     {'name': 'update_project_example',
                                      'users': self.project.users,
                                      'url': 'http://update-project.repo',
@@ -37,12 +37,12 @@ class TestProjectViewSetAuthUser(TestCase):
         self.assertEqual(request.status_code, status.HTTP_200_OK)
 
     def test_delete_project(self):
-        request = self.client.delete(f'/api/v1/projects/{self.project.id}/')
+        request = self.client.delete(f'/api/projects/{self.project.id}/')
         self.assertEqual(request.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_get_details_project(self):
         project = mixer.blend(Project, name='project_example')
-        request = self.client.get(f'/api/v1/projects/{project.id}/')
+        request = self.client.get(f'/api/projects/{project.id}/')
         self.assertEqual(request.status_code, status.HTTP_200_OK)
         project = Project.objects.get(id=project.id)
         self.assertEqual(project.name, 'project_example')
@@ -54,7 +54,7 @@ class TestProjectViewSetGuest(TestCase):
         self.project = mixer.blend(Project)
 
     def test_update_other_roles(self):
-        response = self.client.patch(f'/api/v1/projects/{self.project.id}/',
+        response = self.client.patch(f'/api/projects/{self.project.id}/',
                                      {'name': 'update_project_example',
                                       'users': self.project.users,
                                       'url': 'http://update-project.repo',
@@ -62,15 +62,15 @@ class TestProjectViewSetGuest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_delete_other_role(self):
-        response = self.client.patch(f'/api/v1/projects/{self.project.id}/')
+        response = self.client.patch(f'/api/projects/{self.project.id}/')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_list(self):
-        response = self.client.get('/api/v1/projects/')
+        response = self.client.get('/api/projects/')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_details_project(self):
-        response = self.client.get(f'/api/v1/projects/{self.project.id}/')
+        response = self.client.get(f'/api/projects/{self.project.id}/')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
@@ -83,18 +83,18 @@ class TestTodoViewSetAuthUser(TestCase):
         self.client = APIClient(HTTP_AUTHORIZATION='Token ' + token.key)
 
     def test_get_list(self):
-        request = self.client.get('/api/v1/notes/')
+        request = self.client.get('/api/notes/')
         self.assertEqual(request.status_code, status.HTTP_200_OK)
 
     def test_create_todo(self):
-        request = self.client.post('/api/v1/notes/',
+        request = self.client.post('/api/notes/',
                                    {'project': self.todo.project.id,
                                     'creator': self.todo.creator.id,
                                     'text': 'description task'})
         self.assertEqual(request.status_code, status.HTTP_201_CREATED)
 
     def test_update_todo(self):
-        request = self.client.put(f'/api/v1/notes/{self.todo.id}/',
+        request = self.client.put(f'/api/notes/{self.todo.id}/',
                                   {'project': self.todo.project.id,
                                    'creator': self.todo.creator.id,
                                    'text': 'update_task'})
@@ -103,21 +103,21 @@ class TestTodoViewSetAuthUser(TestCase):
         self.assertEqual(todo.text, 'update_task')
 
     def test_partial_update_todo(self):
-        request = self.client.patch(f'/api/v1/notes/{self.todo.id}/',
+        request = self.client.patch(f'/api/notes/{self.todo.id}/',
                                     {'text': 'update_task'})
         self.assertEqual(request.status_code, status.HTTP_200_OK)
         todo = TODO.objects.get(id=self.todo.id)
         self.assertEqual(todo.text, 'update_task')
 
     def test_delete_todo(self):
-        request = self.client.delete(f'/api/v1/notes/{self.todo.id}/')
+        request = self.client.delete(f'/api/notes/{self.todo.id}/')
         self.assertEqual(request.status_code, status.HTTP_204_NO_CONTENT)
         todo = TODO.objects.get(id=self.todo.id)
         self.assertEqual(todo.is_active, False)
 
     def test_details_todo(self):
         todo = mixer.blend(TODO, text='task_example')
-        request = self.client.get(f'/api/v1/notes/{self.todo.id}/')
+        request = self.client.get(f'/api/notes/{self.todo.id}/')
         self.assertEqual(request.status_code, status.HTTP_200_OK)
         todo = TODO.objects.get(id=todo.id)
         self.assertEqual(todo.text, 'task_example')
@@ -129,33 +129,33 @@ class TestTodoViewSetGuest(TestCase):
         self.todo = mixer.blend(TODO)
 
     def test_get_list(self):
-        request = self.client.get('/api/v1/notes/')
+        request = self.client.get('/api/notes/')
         self.assertEqual(request.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_create_todo(self):
-        request = self.client.post('/api/v1/notes/',
+        request = self.client.post('/api/notes/',
                                   {'project': self.todo.project.id,
                                    'creator': self.todo.creator.id,
                                    'text': 'description task'})
         self.assertEqual(request.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_update_todo(self):
-        request = self.client.put(f'/api/v1/notes/{self.todo.id}/',
+        request = self.client.put(f'/api/notes/{self.todo.id}/',
                                   {'project': self.todo.project.id,
                                    'creator': self.todo.creator.id,
                                    'text': 'description task'})
         self.assertEqual(request.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_partial_update_todo(self):
-        request = self.client.patch(f'/api/v1/notes/{self.todo.id}/',
+        request = self.client.patch(f'/api/notes/{self.todo.id}/',
                                   {'text': 'description task'})
         self.assertEqual(request.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_delete_todo(self):
-        request = self.client.get(f'/api/v1/notes/{self.todo.id}/')
+        request = self.client.get(f'/api/notes/{self.todo.id}/')
         self.assertEqual(request.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_details_todo(self):
         todo = mixer.blend(TODO, text='task_example')
-        request = self.client.get(f'/api/v1/notes/{self.todo.id}/')
+        request = self.client.get(f'/api/notes/{self.todo.id}/')
         self.assertEqual(request.status_code, status.HTTP_401_UNAUTHORIZED)
